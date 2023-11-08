@@ -25,10 +25,7 @@ public class StringSchema  extends BaseSchema {
     public boolean isValid(Object inp) {
 
         if (getRequired()) {
-            if (inp == null) {
-                return false;
-            }
-            if (!inp.getClass().equals(String.class)) {
+            if (checkNull(inp) || !inp.getClass().equals(String.class)) {
                 return false;
             }
             setValid(inp.toString().length() > 0);
@@ -43,5 +40,9 @@ public class StringSchema  extends BaseSchema {
         }
 
         return getValid();
+    }
+
+    public boolean checkNull(Object inp) {
+        return inp == null;
     }
 }

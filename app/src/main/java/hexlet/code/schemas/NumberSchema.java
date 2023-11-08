@@ -6,13 +6,21 @@ public class NumberSchema extends BaseSchema {
     private int startValue;
     private int endValue;
 
+    public NumberSchema positive() {
+        this.isPositive = true;
+        return this;
+    }
+
+    public NumberSchema range(int start, int end) {
+        this.isRange = true;
+        this.startValue = start;
+        this.endValue = end;
+        return this;
+    }
     @Override
     public boolean isValid(Object inp) {
         if (getRequired()) {
-            if (inp == null) {
-                return false;
-            }
-            if (!inp.getClass().equals(Integer.class)) {
+            if (checkNull(inp) || !inp.getClass().equals(Integer.class)) {
                 return false;
             }
             setValid(inp.toString().length() > 0);
@@ -31,15 +39,7 @@ public class NumberSchema extends BaseSchema {
         return getValid();
     }
 
-    public NumberSchema positive() {
-        this.isPositive = true;
-        return this;
-    }
-
-    public NumberSchema range(int start, int end) {
-        this.isRange = true;
-        this.startValue = start;
-        this.endValue = end;
-        return this;
+    public boolean checkNull(Object inp) {
+        return inp == null;
     }
 }
