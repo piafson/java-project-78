@@ -1,48 +1,47 @@
 package hexlet.code.schemas;
 
-public class StringSchema  extends BaseSchema {
+public final class StringSchema  extends BaseSchema {
 
-    private String containsText = "";
-    private int minLength;
-    private boolean isRequired;
-    private boolean isContains;
-    private boolean isMinLength;
-
-    public StringSchema minLength(int len) {
-        this.isMinLength = true;
-        this.minLength = len;
+    public StringSchema required() {
+        addCheck(
+                "required",
+                value -> {
+                    if (value == null || !(value.getClass().equals(String.class))) {
+                        return false;
+                    } else {
+                        return !((String) value).equals("");
+                    }
+                }
+        );
         return this;
+    }
 
+    public StringSchema minLength(int stringLen) {
+        addCheck(
+                "minLength",
+                value -> {
+                    if (!(value.getClass().equals(String.class)) && stringLen == 0) {
+                        return true;
+                    } else {
+                        return  ((String) value).length() >= stringLen;
+                    }
+                }
+        );
+        return this;
     }
 
     public StringSchema contains(String inp) {
-        this.containsText = inp;
-        this.isContains = true;
+        addCheck(
+                "contains",
+                value -> {
+                    if (inp.equals("")) {
+                        return true;
+                    } else if (inp == null) {
+                        return false;
+                    }
+                    return ((String) value).contains(inp);
+                }
+        );
         return this;
-    }
-
-    @Override
-    public boolean isValid(Object inp) {
-
-        if (getRequired()) {
-            if (checkNull(inp) || !inp.getClass().equals(String.class)) {
-                return false;
-            }
-            setValid(inp.toString().length() > 0);
-        }
-
-        if (isContains) {
-            setValid(inp.toString().contains(containsText));
-        }
-
-        if (isMinLength) {
-            setValid(inp.toString().length() >= minLength);
-        }
-
-        return getValid();
-    }
-
-    public boolean checkNull(Object inp) {
-        return inp == null;
     }
 }

@@ -1,45 +1,44 @@
 package hexlet.code.schemas;
 
-public class NumberSchema extends BaseSchema {
-    private boolean isPositive;
-    private boolean isRange;
-    private int startValue;
-    private int endValue;
+import java.util.Objects;
+
+public final class NumberSchema extends BaseSchema {
+
+    public NumberSchema required() {
+        addCheck(
+                "required",
+                Objects::nonNull
+        );
+        return this;
+    }
 
     public NumberSchema positive() {
-        this.isPositive = true;
+        addCheck(
+                "positive",
+                value -> {
+                    if (value == null) {
+                        return true;
+                    } else if (value.getClass().equals(Integer.class)) {
+                        return (Integer) value > 0;
+                    }
+                    return false;
+                }
+        );
         return this;
     }
 
     public NumberSchema range(int start, int end) {
-        this.isRange = true;
-        this.startValue = start;
-        this.endValue = end;
+        addCheck(
+                "range",
+                value -> {
+                    if (!(value.getClass().equals(Integer.class))) {
+                        return true;
+                    } else if (start == 0 && end == 0) {
+                        return true;
+                    }
+                    return (Integer) value >= start && (Integer) value <= end;
+                }
+        );
         return this;
-    }
-    @Override
-    public boolean isValid(Object inp) {
-        if (getRequired()) {
-            if (checkNull(inp) || !inp.getClass().equals(Integer.class)) {
-                return false;
-            }
-            setValid(inp.toString().length() > 0);
-        }
-
-        if (isPositive) {
-            if (!getRequired() && inp == null) {
-                return true;
-            }
-            setValid((Integer) inp > 0);
-        }
-
-        if (isRange) {
-            setValid((Integer) inp >= startValue && (Integer) inp <= endValue);
-        }
-        return getValid();
-    }
-
-    public boolean checkNull(Object inp) {
-        return inp == null;
     }
 }
