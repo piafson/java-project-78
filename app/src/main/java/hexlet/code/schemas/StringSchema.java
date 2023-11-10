@@ -6,7 +6,7 @@ public final class StringSchema  extends BaseSchema {
         addCheck(
                 "required",
                 value -> {
-                    if (value == null || !(value.getClass().equals(String.class))) {
+                    if (value == null || !(value instanceof String)) {
                         return false;
                     } else {
                         return !((String) value).equals("");
@@ -20,7 +20,7 @@ public final class StringSchema  extends BaseSchema {
         addCheck(
                 "minLength",
                 value -> {
-                    if (!(value.getClass().equals(String.class)) && stringLen == 0) {
+                    if (!(value instanceof String) && stringLen == 0) {
                         return true;
                     } else {
                         return  ((String) value).length() >= stringLen;

@@ -18,7 +18,7 @@ public final class NumberSchema extends BaseSchema {
                 value -> {
                     if (value == null) {
                         return true;
-                    } else if (value.getClass().equals(Integer.class)) {
+                    } else if (value instanceof Integer) {
                         return (Integer) value > 0;
                     }
                     return false;
@@ -31,7 +31,7 @@ public final class NumberSchema extends BaseSchema {
         addCheck(
                 "range",
                 value -> {
-                    if (!(value.getClass().equals(Integer.class))) {
+                    if (!(value instanceof Integer)) {
                         return true;
                     } else if (start == 0 && end == 0) {
                         return true;
